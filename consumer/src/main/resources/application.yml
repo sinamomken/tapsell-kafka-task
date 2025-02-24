@@ -1,4 +1,9 @@
+server:
+  port: 8081
+
 spring:
+  application:
+    name: consumer-app
   cassandra:
     contact-points: localhost  # Change if using a remote server
     port: 9042
