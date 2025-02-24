@@ -20,7 +20,7 @@ open class KafkaProducerConfig {
         configProps[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapAddress;
         configProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         configProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
-        configProps[JsonSerializer.TYPE_MAPPINGS] = "com.example.entity.kafka.ClickEvent, com.example.entity.kafka.ImpressionEvent"
+        configProps[JsonSerializer.TYPE_MAPPINGS] = "clickEvent:com.example.entity.kafka.ClickEvent, impressionEvent:com.example.entity.kafka.ImpressionEvent"
         return DefaultKafkaProducerFactory(configProps);
     }
 
