@@ -7,3 +7,14 @@ spring:
     username: cassandra
     password: cassandra
     schema-action: create_if_not_exists
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.Serializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.Deserializer
+      group-id: my-consumer-group
+      auto-offset-reset: earliest
