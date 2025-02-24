@@ -1,7 +1,11 @@
 package com.example.entity.cassandra
 
+import org.springframework.data.cassandra.core.mapping.PrimaryKey
+import org.springframework.data.cassandra.core.mapping.Table
+
+@Table("impression_event")
 class AdEvent(
-    val requestId: String,
+    @PrimaryKey val requestId: String,
     val adId: String,
     val adTitle: String,
     val advertiserCost: Double,
