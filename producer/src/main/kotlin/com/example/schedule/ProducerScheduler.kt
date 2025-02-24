@@ -19,13 +19,13 @@ open class ProducerScheduler {
         private val IMPRESSION_TIME = 1000L;
     }
 
-    @Autowired
+//    @Autowired
 //    private lateinit var kafkaTemplate: KafkaTemplate<String, Any>;
 
     private var requestId = 1;
     private var clickTime = 1L;
 
-    @Scheduled(fixedDelayString = "1", timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedDelay = 1000)
     fun produce() {
         println("Start of produce()")
         /*val impressionEvent = ImpressionEvent(
