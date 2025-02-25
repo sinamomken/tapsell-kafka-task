@@ -27,7 +27,7 @@ open class KafkaConsumerConfig {
         val converter = StringJsonMessageConverter()
         val typeMapper = DefaultJackson2JavaTypeMapper()
         typeMapper.typePrecedence = Jackson2JavaTypeMapper.TypePrecedence.TYPE_ID
-        typeMapper.addTrustedPackages("com.example.entity.kafka")
+        typeMapper.addTrustedPackages("*")
         val mappings: MutableMap<String, Class<*>> = HashMap()
         mappings["clickEvent"] = ClickEvent::class.java
         mappings["impressionEvent"] = ImpressionEvent::class.java
@@ -42,7 +42,9 @@ open class KafkaConsumerConfig {
         props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapAddress
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java
-        return DefaultKafkaConsumerFactory(props)
+//        val deserializer = JsonDeserializer<Any>()
+//        deserializer.addTrustedPackages("*")
+        return DefaultKafkaConsumerFactory(props);
     }
 
     @Bean
