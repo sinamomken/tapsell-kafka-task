@@ -1,5 +1,6 @@
 package com.example.listener
 
+import com.example.entity.cassandra.AdEvent
 import com.example.entity.kafka.ClickEvent
 import com.example.entity.kafka.ImpressionEvent
 import com.example.mapper.AdEventMapper
@@ -16,26 +17,29 @@ open class MultiTypeKafkaListener(
     val adEventMapper: AdEventMapper
     ) {
     @KafkaHandler
-    fun handleImpressionEvent(impressionEvent: ImpressionEvent) {
-        val adEvent = adEventMapper.impressionEventToAdEvent(impressionEvent)
-        adEventRepository.save(adEvent)
+    fun handleImpressionEvent(impressionEvent: ImpressionEvent) : AdEvent? {
+        var adEvent = adEventMapper.impressionEventToAdEvent(impressionEvent)
+        adEvent = adEventRepository.save(adEvent)
         println("AdEvent inserted successfully: $adEvent")
+        return adEvent
     }
 
     @KafkaHandler
-    fun handleClickEvent(clickEvent: ClickEvent) {
-        val adEvent = adEventRepository.findByRequestId(clickEvent.requestId)
+    fun handleClickEvent(clickEvent: ClickEvent) : AdEvent? {
+        var adEvent = adEventRepository.findByRequestId(clickEvent.requestId)
         adEvent?.apply {
-            adEventMapper.clickEventToAdEvent(clickEvent, adEvent)
-            adEventRepository.save(adEvent)
+            adEventMapper.clickEventToAdEvent(clickEvent, adEvent!!)
+            adEvent = adEventRepository.save(adEvent)
             println("AdEvent updated: $adEvent")
         } ?: run {
             println("AdEvent ${clickEvent.requestId} not found")
         }
+        return adEvent
     }
 
     @KafkaHandler(isDefault = true)
-    fun handleUnknown(object1: Any) {
+    fun handleUnknown(object1: Any) : AdEvent? {
         println("Unknown type received: $object1")
+        return null;
     }
 }
