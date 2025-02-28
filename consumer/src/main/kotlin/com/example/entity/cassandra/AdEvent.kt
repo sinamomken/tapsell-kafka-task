@@ -4,7 +4,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey
 import org.springframework.data.cassandra.core.mapping.Table
 
 @Table("impression_event")
-class AdEvent(
+data class AdEvent(
     @PrimaryKey val requestId: String,
     val adId: String,
     val adTitle: String,
