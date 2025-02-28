@@ -3,7 +3,7 @@ package com.example.listener
 import com.example.entity.kafka.ClickEvent
 import com.example.entity.kafka.ImpressionEvent
 import com.example.mapper.AdEventMapper
-import com.example.repository.ImpressionEventRepository
+import com.example.repository.AdEventRepository
 import org.springframework.kafka.annotation.KafkaHandler
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
@@ -12,18 +12,26 @@ import org.springframework.stereotype.Component
 @Component
 @KafkaListener(id = "my-consumer-group", topics = ["events_topic"])
 open class MultiTypeKafkaListener(
-    val impressionEventRepository: ImpressionEventRepository,
+    val adEventRepository: AdEventRepository,
     val adEventMapper: AdEventMapper
     ) {
     @KafkaHandler
-    fun handleClickEvent(clickEvent: ClickEvent) {
-        println("ClickEvent received: $clickEvent")
+    fun handleImpressionEvent(impressionEvent: ImpressionEvent) {
+        val adEvent = adEventMapper.impressionEventToAdEvent(impressionEvent)
+        adEventRepository.save(adEvent)
+        println("AdEvent inserted successfully: $adEvent")
     }
 
     @KafkaHandler
-    fun handleImpressionEvent(impressionEvent: ImpressionEvent) {
-        println("ImpressionEvent received: $impressionEvent")
-
+    fun handleClickEvent(clickEvent: ClickEvent) {
+        val adEvent = adEventRepository.findByRequestId(clickEvent.requestId)
+        adEvent?.apply {
+            adEventMapper.clickEventToAdEvent(clickEvent, adEvent)
+            adEventRepository.save(adEvent)
+            println("AdEvent updated: $adEvent")
+        } ?: run {
+            println("AdEvent ${clickEvent.requestId} not found")
+        }
     }
 
     @KafkaHandler(isDefault = true)

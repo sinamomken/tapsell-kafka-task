@@ -3,7 +3,7 @@ package com.example.entity.cassandra
 import org.springframework.data.cassandra.core.mapping.PrimaryKey
 import org.springframework.data.cassandra.core.mapping.Table
 
-@Table("impression_event")
+@Table("adevent")
 data class AdEvent(
     @PrimaryKey val requestId: String,
     val adId: String,
@@ -12,4 +12,4 @@ data class AdEvent(
     val appId: String,
     val appTitle: String,
     val impressionTime: Long,
-    val clickTime: Long)
+    var clickTime: Long)
